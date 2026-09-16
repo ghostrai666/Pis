@@ -1,5 +1,11 @@
 ﻿namespace PIS
 {
+
+    /// <summary>
+    ///  равгвввввввввввввввво
+    /// </summary>
+
+
     class CurrencyRate
     {
         public string Currency1;
