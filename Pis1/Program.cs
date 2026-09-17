@@ -1,4 +1,6 @@
-﻿namespace PIS
+﻿using System.IO;
+
+namespace PIS
 {
 
     /// <summary>
@@ -51,7 +53,13 @@
     {
         static void Main(string[] args)
         {
-            string input = Console.ReadLine();
+            //string input = Console.ReadLine();
+
+
+            string file = "Currrency.txt";
+
+            string input = File.ReadAllText(file);
+
 
             CurrencyRate newCurrency = CurrencyRate.Parser(input);
 
@@ -60,10 +68,11 @@
             Console.WriteLine($"Валюта 2: {newCurrency.Currency2}");
             Console.WriteLine($"курс: {newCurrency.Rate}");
             Console.WriteLine($"дата: {newCurrency.Date}");
+
+           
         }
     }
 }
 
 // КурсыВалют "Доллар" "Рубль" 84,80 2026.09.09
 
-// должно считываться с файла
