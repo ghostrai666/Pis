@@ -4,6 +4,7 @@ namespace PIS
 {
 
     /// <summary>
+    /// 15 вариант
     ///  равгвввввввввввввввво
     /// </summary>
 
@@ -15,36 +16,31 @@ namespace PIS
         public double Rate;
         public string Date;
 
-        public static CurrencyRate Parser(string a)
+        
+
+        public static CurrencyRate Parser(string input)
         {
-            // КурсыВалют "Доллар" "Рубль" 84,80 2026.09.09
+            string text = input.Trim();
+
+            while (text.Contains("  "))
+            {
+                text = text.Replace("  ", " ");
+            }
+
+            string[] parts = text.Split(' ');
+
+            // [курсывалют] [доллар] [рубль] [84,8] [2026.09.09]
+
 
             CurrencyRate tempCurrency = new CurrencyRate();
 
-            string[] parts = a.Split('"');
-
-            // [курсыВалют] [Доллар] [ ] [Рубль] [84,80 2026.09.09]
-
-            tempCurrency.Currency1 = parts[1];
-            tempCurrency.Currency2 = parts[3];
-
-            // [84, 80 2026.09.09]
-
-            string rateDateText = parts[4].Trim(); // .Trim удаляет пробелы до текста и после
-
-            while (rateDateText.Contains("  "))
-            {
-                rateDateText = rateDateText.Replace("  ", " ");
-            }
-
-            string[] rateDate = rateDateText.Split(' ');
-
-            tempCurrency.Rate = Convert.ToDouble(rateDate[0]);
-
-            tempCurrency.Date = rateDate[1];
+            // Trim('"') срезает кавычки по краям у строк
+            tempCurrency.Currency1 = parts[1].Trim('"');
+            tempCurrency.Currency2 = parts[2].Trim('"');
+            tempCurrency.Rate = Convert.ToDouble(parts[3]);
+            tempCurrency.Date = parts[4];
 
             return tempCurrency;
-
         }
     }
 
@@ -53,23 +49,29 @@ namespace PIS
     {
         static void Main(string[] args)
         {
-            //string input = Console.ReadLine();
+            Console.Write("введите пункт 1,2,3: ");
 
+            while (true)
+            {
+                string newInput = Console.ReadLine();
 
-            string file = "Currrency.txt";
+                if (newInput == "3")
+                {
+                    break;
+                }
+                else if (newInput == "2")
+                {
+                    string input = Console.ReadLine();
 
-            string input = File.ReadAllText(file);
+                    CurrencyRate newCurrency = CurrencyRate.Parser(input);
 
-
-            CurrencyRate newCurrency = CurrencyRate.Parser(input);
-
-
-            Console.WriteLine($"Валюта 1: {newCurrency.Currency1}");
-            Console.WriteLine($"Валюта 2: {newCurrency.Currency2}");
-            Console.WriteLine($"курс: {newCurrency.Rate}");
-            Console.WriteLine($"дата: {newCurrency.Date}");
-
-           
+                    Console.WriteLine($"Валюта 1: {newCurrency.Currency1}");
+                    Console.WriteLine($"Валюта 2: {newCurrency.Currency2}");
+                    Console.WriteLine($"Курс:     {newCurrency.Rate}");
+                    Console.WriteLine($"Дата:     {newCurrency.Date}");
+                }
+            }
+  
         }
     }
 }
