@@ -1,24 +1,15 @@
 ﻿using System.IO;
 
-namespace PIS
+namespace Pis1
 {
 
     /// <summary>
     /// 15 вариант
-    ///  равгвввввввввввввввво
     /// </summary>
 
-
-    class CurrencyRate
+    public static class Handlers // обработчик строк
     {
-        public string Currency1;
-        public string Currency2;
-        public double Rate;
-        public string Date;
-
-        
-
-        public static CurrencyRate Parser(string input)
+        public static string[] Handler(string input)
         {
             string text = input.Trim();
 
@@ -27,54 +18,108 @@ namespace PIS
                 text = text.Replace("  ", " ");
             }
 
-            string[] parts = text.Split(' ');
+            string[] parts = text.Split(" ");
 
-            // [курсывалют] [доллар] [рубль] [84,8] [2026.09.09]
+            return parts;
+        }
 
+        public static CurrencyRate ParseAny(string input)
+        {
+            // Готовим массив один раз для любого типа курса
+            string[] parts = Handlers.Handler(input);
 
-            CurrencyRate tempCurrency = new CurrencyRate();
+            if (parts[0] == "КриптоКурс")
+            {
+                return CryptoCurrencyRate.Parser(parts);
+            }
+            else if (parts[0] == "БанковскийКурс")
+            {
+                return BankCurrencyRate.Parser(parts);
+            }
 
-            // Trim('"') срезает кавычки по краям у строк
-            tempCurrency.Currency1 = parts[1].Trim('"');
-            tempCurrency.Currency2 = parts[2].Trim('"');
-            tempCurrency.Rate = Convert.ToDouble(parts[3]);
-            tempCurrency.Date = parts[4];
+            return CurrencyRate.Parser(parts);
+        }
 
-            return tempCurrency;
+        public static void PrintRate(CurrencyRate rate)
+        {
+            Console.WriteLine($"Валюта 1: {rate.Currency1}");
+            Console.WriteLine($"Валюта 2: {rate.Currency2}");
+            Console.WriteLine($"Курс:     {rate.Rate}");
+            Console.WriteLine($"Дата:     {rate.Date}");
+
+            // если is вернул true, rate приводится к CryptoCurrencyRate и записывается в crypto
+            if (rate is CryptoCurrencyRate crypto)
+            {
+                Console.WriteLine($"Сеть:     {crypto.Exchange}");
+                Console.WriteLine($"Волатильность: {crypto.IsVolatile}");
+            }
+            else if (rate is BankCurrencyRate bank)
+            {
+                Console.WriteLine($"Банк:     {bank.BankName}");
+                Console.WriteLine($"Комиссия: {bank.Commission}%");
+            }
+
+            Console.WriteLine(new string('-', 35));
         }
     }
 
-
     internal class Program
     {
+
         static void Main(string[] args)
         {
-            Console.Write("введите пункт 1,2,3: ");
 
             while (true)
             {
-                string newInput = Console.ReadLine();
+                Console.WriteLine("1. запарсить строку");
+                Console.WriteLine("2. запарсить файл");
+                Console.WriteLine("3. выйти");
+                Console.Write("введите пункт 1,2: ");
 
-                if (newInput == "3")
+                string Input = Console.ReadLine();
+
+                Console.Clear();
+
+                if (Input == "1")
+                {
+                    Console.Write("Введите строку: ");
+                    string input = Console.ReadLine();
+
+                    CurrencyRate rate = ParseAny(input);
+                    PrintRate(rate);
+
+                    Console.ReadKey();
+                    Console.Clear();
+                }
+                else if (Input == "2")
+                {
+                    string path = "data.txt";
+
+                    string[] lines = File.ReadAllLines(path);
+
+                    foreach (string line in lines)
+                    {
+                        CurrencyRate rate = ParseAny(line);
+                        PrintRate(rate);
+                    }
+
+                    Console.ReadKey();
+                    Console.Clear();
+                }
+                else if (Input == "3")
                 {
                     break;
                 }
-                else if (newInput == "2")
-                {
-                    string input = Console.ReadLine();
-
-                    CurrencyRate newCurrency = CurrencyRate.Parser(input);
-
-                    Console.WriteLine($"Валюта 1: {newCurrency.Currency1}");
-                    Console.WriteLine($"Валюта 2: {newCurrency.Currency2}");
-                    Console.WriteLine($"Курс:     {newCurrency.Rate}");
-                    Console.WriteLine($"Дата:     {newCurrency.Date}");
-                }
             }
-  
         }
     }
 }
 
-// КурсыВалют "Доллар" "Рубль" 84,80 2026.09.09
 
+// КурсыВалют "Доллар" "Рубль" 84,80 2026.09.09
+// КриптоКурс BTC USDT 62500,50 2026.09.09 Binance true
+// БанковскийКурс USD RUB 85,50 2026.09.09 Сбербанк 1,5
+
+// C:\Users\kotov\source\repos\Pis1
+
+// https://github.com/ghostrai666/Pis.git
