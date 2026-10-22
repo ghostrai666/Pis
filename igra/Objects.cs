@@ -4,7 +4,7 @@ using System.Text;
 
 namespace igra
 {
-    class GameObject
+    public class GameObject
     {
         public int X;
         public int Y;
@@ -17,7 +17,7 @@ namespace igra
         }
     }
 
-    class Item : GameObject
+    public class Item : GameObject
     {
         public Item(int x, int y) : base(x, y)
         {
@@ -25,7 +25,7 @@ namespace igra
         }
     }
 
-    class Axe : Item
+    public class Axe : Item
     {
         public Axe(int x, int y) : base(x, y)
         {
@@ -33,7 +33,7 @@ namespace igra
         }
     }
 
-    class Torch : Item
+    public class Torch : Item
     {
         public Torch(int x, int y) : base(x, y)
         {
@@ -41,7 +41,7 @@ namespace igra
         }
     }
 
-    class Spider : GameObject
+    public class Spider : GameObject
     {
         public Spider(int x, int y) : base(x, y)
         {
@@ -49,7 +49,7 @@ namespace igra
         }
     }
 
-    class Player : GameObject
+    public class Player : GameObject
     {
         public List<Item> Inventory = new List<Item>();
         public bool HasTorch = false;

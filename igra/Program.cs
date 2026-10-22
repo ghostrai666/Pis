@@ -6,7 +6,7 @@ using System.IO;
 
 namespace igra
 {
-    class Program
+    public class Program
     {
         static void Main()
         {

@@ -4,9 +4,9 @@ using System.Text;
 
 namespace igra
 {
-    class ConsoleRender
+    public class ConsoleRender
     {
-        public void Draw(string[] lines, Player player, List<GameObject> objects)
+        public void Draw(char[,] map, Player player, List<GameObject> objects)
         {
             int radius = player.View;
 
@@ -16,28 +16,33 @@ namespace igra
                 {
                     char symbol = '.';
 
-                    if (y < 0 || y >= lines.Length || x < 0 || x >= lines[y].Length)
+
+                    if (y < 0 || y >= map.GetLength(0) || x < 0 || x >= map.GetLength(1)) // отрисовка границ
                     {
                         symbol = ' ';
                     }
-                    else if (player.X == x && player.Y == y)
+                    else if (player.X == x && player.Y == y) // отрисовка игрока
                     {
-                        symbol = '#';
+                        symbol = '#'; 
                     }
                     else
                     {
-                        foreach (GameObject obj in objects)
+                        foreach (GameObject obj in objects) // отрисовка предметов
                         {
                             if (obj.X == x && obj.Y == y)
                             {
                                 symbol = GetSymbol(obj);
+                                break;
                             }
                         }
                     }
+                    
 
                     Console.Write(symbol);
                 }
+
                 Console.WriteLine();
+
             }
         }
 
@@ -49,6 +54,9 @@ namespace igra
             return '.';
         }
     }
+
+
+
 
 
 }
